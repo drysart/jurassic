@@ -1329,7 +1329,10 @@ namespace UnitTests
                   };
                 }).call(this);"),
                TestUtils.NormalizeText(engine.Evaluate<string>("CoffeeScript.compile(script, {})")));
-            System.IO.File.WriteAllText(@"c:\users\paul\actual.txt", TestUtils.NormalizeText(engine.Evaluate<string>("CoffeeScript.compile(script, {})")));
+
+            var dir = System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var fn = System.IO.Path.Combine(dir, "actual.txt");
+            System.IO.File.WriteAllText(fn, TestUtils.NormalizeText(engine.Evaluate<string>("CoffeeScript.compile(script, {})")));
         }
 
         [TestMethod]
