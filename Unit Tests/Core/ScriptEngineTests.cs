@@ -117,9 +117,9 @@ namespace UnitTests
 
             public static bool Params1(params int[] p) { return p.Length == 2 && p[0] == 1 && p[1] == 2; }
 
-            public static bool Overload1(int a, int b) { return true; }
-            public static bool Overload1(double a, double b) { return false; }
-            public static string Overload1(string a, string b) { return a + b; }
+            public static string Overload1(int a, int b) { return "int: " + (a + b).ToString(); }
+            public static string Overload1(double a, double b) { return "double: " + (a + b).ToString(); }
+            public static string Overload1(string a, string b) { return "string: " + a + b; }
         }
 
         [TestMethod]
@@ -177,10 +177,10 @@ namespace UnitTests
             // Overload test.
             Assert.AreEqual(4, engine.Evaluate("Math.Max(3, 4)"));
             Assert.AreEqual(3, engine.Evaluate("Math.Abs(-3)"));
-            Assert.AreEqual(false, engine.Evaluate("TestClass.Overload1(1, 2)"));
-            Assert.AreEqual("Hello, world", engine.Evaluate<string>("TestClass.Overload1('Hello, ', 'world')"));
+            Assert.AreEqual("double: 3", engine.Evaluate("TestClass.Overload1(1, 2)"));
+            Assert.AreEqual("string: Hello, world", engine.Evaluate<string>("TestClass.Overload1('Hello, ', 'world')"));
             engine.SetGlobalValue("Int32", typeof(int));
-            Assert.AreEqual(true, engine.Evaluate("TestClass.Overload1(new Int32(1), new Int32(2))"));
+            Assert.AreEqual("int: 3", engine.Evaluate("TestClass.Overload1(new Int32(1), new Int32(2))"));
 
             // Incorrect number of arguments.
             TestUtils.ExpectException<JavaScriptException>(() => engine.Evaluate("Math.Sin()"));

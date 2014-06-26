@@ -486,14 +486,20 @@ namespace Jurassic.Compiler
             {
                 if (this.parameterInfo == null || this.HasDefaultValue == false)
                     return null;
-                var attribute = GetCustomAttribute<DefaultParameterValueAttribute>();
-                if (attribute == null)
-                    throw new InvalidOperationException(string.Format("Expected [DefaultParameterValue] on parameter '{0}'.", this.parameterInfo.Name));
-                if (attribute.Value == null && this.Type.IsValueType == true)
+
+                var defValue = this.parameterInfo.RawDefaultValue;
+                if (defValue == System.DBNull.Value)
+                {
+                    var attribute = GetCustomAttribute<DefaultParameterValueAttribute>();
+                    if (attribute == null)
+                        throw new InvalidOperationException(string.Format("Expected [DefaultParameterValue] or DefaultValue on parameter '{0}'.", this.parameterInfo.Name));
+                    defValue = attribute.Value;
+                }
+                if (defValue == null && this.Type.IsValueType == true)
                     throw new InvalidOperationException(string.Format("Null is not a valid default value for parameter '{0}'.", this.parameterInfo.Name));
-                if (attribute.Value != null && attribute.Value.GetType() != this.Type)
+                if (defValue != null && defValue.GetType() != this.Type)
                     throw new InvalidOperationException(string.Format("Default value for parameter '{0}' should be '{1}'.", this.parameterInfo.Name, this.Type));
-                return attribute.Value;
+                return defValue;
             }
         }
 
