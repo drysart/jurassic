@@ -155,7 +155,7 @@ namespace Jurassic.Library
             if (this.body == null)
             {
                 // Compile the function.
-                var scope = DeclarativeScope.CreateFunctionScope(this.Engine.CreateGlobalScope(), this.Name, this.ArgumentNames);
+                var scope = DeclarativeScope.CreateFunctionScope(this.ParentScope, this.Name, this.ArgumentNames);
                 var functionGenerator = new FunctionMethodGenerator(this.Engine, scope, this.Name, this.ArgumentNames, this.BodyText, new CompilerOptions());
                 functionGenerator.GenerateCode();
                 this.generatedMethod = functionGenerator.GeneratedMethod;
